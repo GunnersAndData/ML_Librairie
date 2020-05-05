@@ -1,6 +1,10 @@
+import os
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
+import numpy as np
 from typing import Union
 sns.set()
 
@@ -37,13 +41,13 @@ def corr_matrix(df: pd.DataFrame,
 
 def pair_plot(df: pd.DataFrame,
               numerical_cols: list,
-              stacked_col: Union[None, str] = None):
+              target: Union[None,str] = None):
     plt.figure(figsize=(10, 10))
-    if stacked_col is not None:
-        numerical_cols.append(stacked_col)
-        sns.pairplot(df[numerical_cols], height=2, hue=stacked_col)
+    if target is not None:
+        numerical_cols.append(target)
+        sns.pairplot(df[numerical_cols],height=2, hue=target)
     else:
-        sns.pairplot(df[numerical_cols], height=2)
+        sns.pairplot(df[numerical_cols],height=2)
 
 
 # Boxplot
@@ -69,8 +73,46 @@ def display_stackedboxplot(df: pd.DataFrame,
         sns.boxplot(x=df[target], y=df[columns_], data=df, palette="viridis")
 
 
-if __name__ == '__main__':
-    import os
-    data = pd.read_csv(os.path.join(os.getcwd(), 'churn.csv'), encoding='utf-8')
-    print(data.head())
-    display_stackedboxplot(data, numerical_cols= ['MonthlyCharges'],target='Churn')
+def display_scatterPlotlyTarget(df: pd.DataFrame, col_x: str,
+                                col_y: str, Path: Union[None, str] = str(os.getcwd()),
+                                save: bool = False):
+    assert (len(df[
+                    col_y].unique())) == 2, 'target with cardinality equal 2 is required'
+    col_y_bool = col_y + "_bool"
+    fig_title = f"{col_x} in terms of {col_y} Rate"
+    df[col_y_bool] = np.where(df[col_y] == "No", 0, 1)
+    df_grouped = df.groupby(col_x)[col_y_bool].mean().reset_index()
+    plot_data = px.scatter(x=df_grouped[col_x],
+                           y=df_grouped[col_y_bool],
+                           title=fig_title)
+    plot_data.update_layout(xaxis=dict(title_text=f'{col_x}'),
+                            yaxis=dict(title_text=f'{col_y}_rate'))
+
+    plot_data.show()
+
+    if save == True and Path is not None:
+        figname = fig_title.replace(" ", "_")
+        plot_data.write_image(f"{Path}/{figname}.png")
+
+
+def display_stackedBarplotPlotly(df: pd.DataFrame, col_x: str,
+                                 col_y: str, save: bool = False,
+                                 Path: Union[None, str] = str(os.getcwd())):
+    assert (len(df[
+                    col_y].unique())) == 2, 'at least target with cardinality equal 2 is required'
+    col_y_bool = col_y + "_bool"
+    fig_title = f"{col_x} in terms of {col_y} Rate"
+    df[col_y_bool] = np.where(df[col_y] == "No", 0, 1)
+    df_grouped = df.groupby(col_x)[col_y_bool].mean().reset_index()
+    plot_data = px.bar(x=df_grouped[col_x],
+                       y=df_grouped[col_y_bool],
+                       color=df_grouped[col_x])
+
+    plot_data.update_layout(xaxis=dict(title_text=f'{col_x}'),
+                            yaxis=dict(title_text=f'{col_y}_rate'))
+
+    plot_data.show()
+
+    if save and Path is not None:
+        figname = fig_title.replace(" ", "_")
+        plot_data.write_image(f"{Path}/{figname}.png")

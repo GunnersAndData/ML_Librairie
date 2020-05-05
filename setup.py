@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="mlibproject",
-    version="0.22",
+    version="0.23",
     author="Farid Ahamada",
     author_email="farid.ahamada25@gmail.com",
     description="The objective of this package is to group"
@@ -25,7 +25,8 @@ setup(
         'pandas',
         'seaborn',
         'matplotlib',
-        'scikit_learn'
+        'scikit_learn',
+        'plotly'
     ],
     python_requires='>=3.6'
 )
