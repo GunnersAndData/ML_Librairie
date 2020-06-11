@@ -28,6 +28,6 @@ pip install -i https://test.pypi.org/simple/ mlibproject
 ### LICENSE
 
 Please be aware that this code is under the GPL3 license. 
-You must report each utilisation of this code to the author of this code (GunnersAndData). 
+You must report each utilisation of this code to the author of this code (FaridAhamadaGunners). 
 Please push your code using this API on a forked Github repo public.
 
