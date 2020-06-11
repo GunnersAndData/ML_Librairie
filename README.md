@@ -19,10 +19,10 @@ pip install -i https://test.pypi.org/simple/ mlibproject
 ### TODO :grin:
 
 - [ ] Complete Code documentation and README
+- [x] Update Preprocessing functions (remove some functions, add features)
 - [x] Complete basic Exploration functions (The initial commit == Test)
 - [ ] Complete Modeling functions
 - [ ] Complete Performance functions
-- [ ] Complete Preprocessing functions
 - [ ] Complete Visualization functions
 
 ### LICENSE
